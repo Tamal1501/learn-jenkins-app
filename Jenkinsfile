@@ -15,7 +15,9 @@ pipeline {
                     ls -la
                     node --version
                     npm --version
-                    npm ci
+                    rm -rf node_modules
+                    npm cache clean --force
+                    npm ci --cache .npm --prefer-offline=false
                     npm run build
                     ls -la
                 '''
