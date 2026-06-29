@@ -10,6 +10,9 @@ pipeline {
                     reuseNode true
                 }
             }
+            environment {
+                NPM_CONFIG_REGISTRY = credentials('npm-registry')
+            }
             steps {
                 sh '''
                     ls -la
