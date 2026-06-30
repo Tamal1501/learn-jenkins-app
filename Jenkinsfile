@@ -27,7 +27,49 @@ pipeline {
             }
         }*/
 
-        stage ('Test') {
+        stage ('Tests') {
+            parallel {
+                stage ('Unit Tests') {
+                    agent {
+                        docker {
+                            image 'node:18-alpine'
+                            reuseNode true
+                        }
+                    }
+                    environment {
+                        NPM_CONFIG_REGISTRY = credentials('npm-registry')
+                    }
+                    steps {
+                        sh '''
+                            test -f build/index.html
+                            npm test
+                        '''
+                    }
+                }
+
+                stage ('E2E Tests') {
+                    agent {
+                        docker {
+                            image 'mcr.microsoft.com/playwright:v1.39.0'
+                            reuseNode true
+                        }
+                    }
+                    environment {
+                        NPM_CONFIG_REGISTRY = credentials('npm-registry')
+                    }
+                    steps {
+                        sh '''
+                            npm install -g serve
+                            serve -s build &
+                            sleep 10
+                            npx playwright test
+                        '''
+                    }
+                }
+            }
+        }
+
+        /*stage ('Test') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -63,7 +105,7 @@ pipeline {
                     npx playwright test
                 '''
             }
-        }
+        }*/
     }
 
     post {
