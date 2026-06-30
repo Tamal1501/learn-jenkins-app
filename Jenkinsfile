@@ -3,7 +3,7 @@ pipeline {
 
     stages {
 
-        stage('Build') {
+        /*stage('Build') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -25,7 +25,7 @@ pipeline {
                     ls -la
                 '''
             }
-        }
+        }*/
 
         stage ('Test') {
             agent {
@@ -41,6 +41,25 @@ pipeline {
                 sh '''
                     test -f build/index.html
                     npm test
+                '''
+            }
+        }
+
+        stage ('E2E') {
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.57.0'
+                    reuseNode true
+                }
+            }
+            environment {
+                NPM_CONFIG_REGISTRY = credentials('npm-registry')
+            }
+            steps {
+                sh '''
+                    npm install -g serve
+                    serve -s build
+                    npx playwright test
                 '''
             }
         }
