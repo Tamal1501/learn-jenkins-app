@@ -28,8 +28,20 @@ pipeline {
         }
 
         stage ('Test') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            environment {
+                NPM_CONFIG_REGISTRY = credentials('npm-registry')
+            }
             steps {
-                echo 'Test Stage'
+                sh '''
+                    test -f build/index.html
+                    npm test
+                '''
             }
         }
     }
