@@ -81,6 +81,7 @@ pipeline {
             }
             steps {
                 sh '''
+                    export NODE_TLS_REJECT_UNAUTHORIZED=0
                     npm install netlify-cli@20.1.1
                     node_modules/.bin/netlify --version
                 '''
