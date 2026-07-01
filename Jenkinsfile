@@ -3,7 +3,7 @@ pipeline {
 
     stages {
 
-        /*stage('Build') {
+        stage('Build') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -25,7 +25,7 @@ pipeline {
                     ls -la
                 '''
             }
-        }*/
+        }
 
         stage ('Tests') {
             parallel {
@@ -69,7 +69,7 @@ pipeline {
             }
         }
 
-        /*stage ('Test') {
+        stage ('Deploy') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -81,13 +81,13 @@ pipeline {
             }
             steps {
                 sh '''
-                    test -f build/index.html
-                    npm test
+                    npm install netlify-cli -g
+                    netlify --version
                 '''
             }
         }
 
-        stage ('E2E') {
+        /*stage ('E2E') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0'
@@ -106,11 +106,5 @@ pipeline {
                 '''
             }
         }*/
-    }
-
-    post {
-        always {
-            junit 'test-results/junit.xml'
-        }
     }
 }
