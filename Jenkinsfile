@@ -123,8 +123,8 @@ pipeline {
                         keepAll: false,
                         reportDir: 'playwright-report',
                         reportFiles: 'index.html',
-                        reportName: "Playwright E2E Test Report"
-                        reportTitles: "Test Report"
+                        reportName: "Playwright E2E Test Report",
+                        reportTitles: "Test Report",
                         useWrapperFileDirectory: true
                     ])
                 }
