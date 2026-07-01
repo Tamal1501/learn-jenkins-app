@@ -97,6 +97,40 @@ pipeline {
             }
         }
 
+        stage ('PROD E2E Tests') {
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.39.0'
+                    reuseNode true
+                }
+            
+            }
+            environment {
+                CI_ENVIRONMENT_URL = 'https://delightful-melba-e4dc18.netlify.app'
+            }
+
+            steps {
+                sh '''
+                    npx playwright test
+                '''
+            }
+
+            post {
+                always {
+                    publishHTML (target: [
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: false,
+                        reportDir: 'playwright-report',
+                        reportFiles: 'index.html',
+                        reportName: "Playwright E2E Test Report"
+                        reportTitles: ""
+                        useWrapperFileDirectory: true
+                    ])
+                }
+            }
+        }
+
         /*stage ('E2E') {
             agent {
                 docker {
