@@ -30,6 +30,9 @@ module.exports = defineConfig({
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: process.env.CI_ENVIRONMENT_URL || 'http://localhost:3000',
 
+    /* Ignore TLS certificate errors (e.g. corporate proxy / SSL inspection). */
+    ignoreHTTPSErrors: true,
+
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
   },
